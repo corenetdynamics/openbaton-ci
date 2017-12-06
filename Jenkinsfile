@@ -27,6 +27,14 @@ pipeline {
 
     stages {
 
+        stage('Run scenario scenario-real-iperf-2') {
+            when { expression { params.TEST_SET == 'all' || params.TEST_SET == 'scenario-real-iperf' || params.TEST_SET == 'simple'} }
+            steps {
+                sh "docker run -P --rm --name integration-tests -p 8181:8181 -v $PEM_FILE:/etc/openbaton/integration-test/integration-test.key -v $INTEGRATION_TESTS_CONFIG:/etc/openbaton/integration-tests/integration-tests.properties -v $VIM_FILES/scenarios/:/etc/openbaton/integration-tests/integration-test-scenarios -v $VIM_FILES/nsd/:/etc/openbaton/integration-tests/network-service-descriptors/ -v $VIM_FILES/${params.VIM_LOCATION}.json:/etc/openbaton/integration-tests/vim-instances/real-vim.json openbaton/integration-tests:${params.BRANCH} scenario-real-iperf.ini"
+            }
+        }
+
+
         stage('Run scenario-real-iperf') {
             when { expression { params.TEST_SET == 'all' || params.TEST_SET == 'scenario-real-iperf' || params.TEST_SET == 'simple'} }
             steps {
