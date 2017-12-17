@@ -60,7 +60,13 @@ Install Jenkins via the official package repositories
 ./02-start-jenkins.sh
 ```
 
-Do the initial configure steps, go to `http://IP_OF_JENKINS:8080`, get the needed key from `/var/log/jenkins/jenkins.log`, choose a username and password for the admin user and skip through the default configuration.
+Do the initial configure steps, and check the logs using the following commands:
+
+```bash
+docker logs -f openbaton-ci
+```
+
+Get the needed key for authenticating at: `http://IP_OF_JENKINS:9090`. Choose a username and password for the admin user and skip through the default configuration.
 
 ## Repository structure
 - `master`: contains this README
