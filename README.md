@@ -1,4 +1,12 @@
-# Continuous Integration with Jenkins Pipelines
+  <img src="https://raw.githubusercontent.com/openbaton/openbaton.github.io/master/images/openBaton.png" width="250"/>
+
+  Copyright © 2015-2017 [Open Baton](http://openbaton.org).
+  Licensed under [Apache v2 License](http://www.apache.org/licenses/LICENSE-2.0).
+
+
+
+# Open Baton Continuous Integration with Jenkins Pipelines
+
 # Table of Contents
 1. [Introduction](#introduction)
 2. [Setup](#setup)
@@ -11,7 +19,9 @@
 ## Introduction
 With multiple possible deployment configurations and multiple test suits to cover most use cases, testing gets overwhelmingly complex.
 
-To achieve continuous integration and delivery the used automation technique should be flexible and extend able. We will be using Jenkins new [Declarative Pipelines](https://jenkins.io/doc/book/pipeline/) and [Docker Compose](https://docs.docker.com/compose/) to provide the possibility of automatic package buildlng, build checking and testing of different system under test against the already existing [integration-tests](https://github.com/openbaton/integration-tests)
+To achieve continuous integration and delivery the used automation technique should be flexible and extend able.
+We will be using Jenkins new [Declarative Pipelines](https://jenkins.io/doc/book/pipeline/) and [Docker Compose](https://docs.docker.com/compose/) to provide the possibility of automatic package buildlng, build checking and testing of different system under test against the already existing [integration-tests](https://github.com/openbaton/integration-tests)
+
 ## Setup
 This has been tested on the following deployment
 - `Ubuntu 16.04`
@@ -21,40 +31,35 @@ This has been tested on the following deployment
 - `OpenStackClient 3.12`
 - `OSPurge 2.0`
 
-### Docker and Docker-Compose
-Install Docker-CE
+### Docker, Docker-Compose, and Jenkins
+
+Install Docker-CE and build the Jenkins docker image
+
 ```bash
-sudo apt-get install \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-sudo apt-key fingerprint 0EBFCD88
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-sudo apt-get update
-sudo apt-get install docker-ce
+./01-setup.sh
 ```
-And Docker-compose
+
+Modify the docker configuration adding the following line for exposing the port remotely
+
 ```bash
-sudo apt-get install python3-pip
-sudo pip3 install docker-compose
+sudo vim /etc/systemd/system/multi-user.target.wants/docker.service
+ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2376
 ```
-Also add your user to the docker group
+
+Afterwards, restart docker:
+
 ```bash
-sudo usermod -aG docker $USER
+sudo systemctl daemon-reload && sudo systemctl restart docker
 ```
-### Jenkins
+
+### Start Jenkins
+
 Install Jenkins via the official package repositories
+
 ```bash
-wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-sudo apt-get update
-sudo apt-get install jenkins
+./02-start-jenkins.sh
 ```
+
 Do the initial configure steps, go to `http://IP_OF_JENKINS:8080`, get the needed key from `/var/log/jenkins/jenkins.log`, choose a username and password for the admin user and skip through the default configuration.
 
 ## Repository structure
