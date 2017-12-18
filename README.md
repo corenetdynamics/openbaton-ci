@@ -77,7 +77,6 @@ Get the needed key for authenticating at: `http://IP_OF_JENKINS:9090`. Choose a 
 - `test-generic`: sub job to run the relevant tests for generic
 - `test-arbitrary-branches`: entry point pipeline to run tests against self defined branch compositions
 - `test-bootstrap-config`: entry point pipeline to run the bootstrap install script against multiple configurations and distributions
-- `test-db_upgrade`: entry point pipeline to check if the database migration between two tags or branches works correctly
 
 This repository is added as a [Multibranch Pipeline](https://jenkins.io/doc/book/pipeline/multibranch/). All repositories including a pipeline must include a single `Jenkinsfile`. Jenkins automatically pulls the branch on run and then executes the found `Jenkinsfile`. New branches will be found as well.
 
@@ -90,9 +89,9 @@ Because the integration tests need some "node specific" configuration (i.e. real
 
 #### Used environment variables
 - `HOST_IP`: IP of the node (needed for ems and docker-compose)
-- `INTEGRATION_TESTS_CONFIG`: Path to integration-tests configuration
-- `PEM_FILE`: Path to ssh private key
-- `VIM_FILES`: Path to vim files
+- `CONFIG`: Path to integration-tests configuration (i.e. /home/ubuntu/jenkins/config)
+- `PEM_FILE`: Path to ssh private key (i.e. /home/ubuntu/jenkins/config/id_rsa)
+- `VIM_FILES`: Path to vim files (i.e. /home/ubuntu/jenkins/config/pop)
 
 Please be sure to provide a working default vimfile called `pop.json` inside your `VIM_FILES` folder, this will be used in your pipelines if not specifically overwritten. Information how to create your `pop.json` can be found [here](https://openbaton.github.io/documentation/pop-registration/)
 ## Pipelines tldr
