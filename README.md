@@ -31,6 +31,10 @@ This has been tested on the following deployment
 - `OpenStackClient 3.12`
 - `OSPurge 2.0`
 
+This video showcase the installation procedure further outlined in the next sections. 
+
+[![asciicast](https://asciinema.org/a/o73DSRNlkfLH1jdzolfGdfc16.png)](https://asciinema.org/a/o73DSRNlkfLH1jdzolfGdfc16)
+
 ### Docker, Docker-Compose, and Jenkins
 
 Install Docker-CE and build the Jenkins docker image
