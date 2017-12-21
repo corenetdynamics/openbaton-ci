@@ -1,8 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 #
 # This script allows you to install jenkins required for open baton ci
 
 set -u
+
+
+if env | grep -q ^OS_AUTH_URL=
+then
+  echo nova.rc file is already exported
+else
+  echo "It seems the nova.rc file was not sourced. Please do source nova.rc file before executing this script"
+  exit 42
+fi
+
 
 check_binary () {
   echo -n " * Checking for '${1}' ... "
@@ -39,5 +49,11 @@ build_jenkins_image() {
 	 $_ex 'docker build . -t jenkins/jenkins:lts-local'
 }
 
+create_pop_file() {
+	echo "Creating the pop file"
+	sed -i.bak "s?AUTH_URL?$OS_AUTH_URL?; s/TENANT/$OS_TENANT_NAME/; s/USER/$OS_USERNAME/; s/PASSWORD/$OS_PASSWORD/" config/vim-instances/pop.json	
+}
+
 install_docker
 build_jenkins_image
+create_pop_file

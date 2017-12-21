@@ -1,0 +1,12 @@
+{
+  "name":"vim-instance",
+  "authUrl":"AUTH_URL",
+  "tenant":"TENANT",
+  "username":"USER",
+  "password":"PASSWORD",
+  "keyPair":"default",
+  "securityGroups": [
+    "default"
+  ],
+  "type":"openstack"
+}
