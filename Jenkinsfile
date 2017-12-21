@@ -3,7 +3,7 @@ pipeline {
     parameters {
         choice(
             name: 'TEST_SET',
-            choices: 'all\nscenario-real-iperf\nscenario-complex-ncat\nscenario-scaling\nerror-in-configure\nerror-in-instantiate\nerror-in-start\nerror-in-terminate\nwrong-lifecycle-event\nsimple',
+            choices: 'all\nscenario-real-iperf\nscenario-complex-ncat\nscenario-scaling\nerror-in-configure\nerror-in-instantiate\nerror-in-start\nerror-in-terminate\nwrong-lifecycle-event\nsimple\nscenario-sipp-packages',
             description: 'Integration tests to run'
         )
         string(
@@ -93,6 +93,14 @@ pipeline {
                 sh "docker run -P --rm --name integration-tests -p 8181:8181 -v $CONFIG:/etc/openbaton/integration-tests -v $VIM_FILES/${params.VIM_LOCATION}.json:/etc/openbaton/integration-tests/vim-instances/real-vim.json openbaton/integration-tests:${params.BRANCH} scenario-real-sipp-fms-heal.ini"
             }
         }
+
+        stage('Run SIPP Network Service') {
+            when { expression { params.TEST_SET == 'scenario-sipp-packages'} }
+            steps {
+                sh "docker run -P --rm --name integration-tests -p 8181:8181 -v $CONFIG:/etc/openbaton/integration-tests -v $VIM_FILES/${params.VIM_LOCATION}.json:/etc/openbaton/integration-tests/vim-instances/real-vim.json openbaton/integration-tests:${params.BRANCH} scenario-sipp-packages.ini"
+            }
+        }
+
     }
 
     post {
