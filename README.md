@@ -33,10 +33,6 @@ This video showcase the installation procedure further outlined in the next sect
 
 [![asciicast](https://asciinema.org/a/153899.png)](https://asciinema.org/a/153899)
 
-This video showcase the installation procedure further outlined in the next sections. 
-
-[![asciicast](https://asciinema.org/a/o73DSRNlkfLH1jdzolfGdfc16.png)](https://asciinema.org/a/o73DSRNlkfLH1jdzolfGdfc16)
-
 ### Docker, Docker-Compose, and Jenkins
 
 Install Docker-CE and build the Jenkins docker image
