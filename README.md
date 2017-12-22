@@ -28,8 +28,10 @@ This has been tested on the following deployment
 - `Jenkins 2.60.2`
 - `Docker 17.06.0-ce`
 - `Docker Compose 1.14.0`
-- `OpenStackClient 3.12`
-- `OSPurge 2.0`
+
+This video showcase the installation procedure further outlined in the next sections.
+
+[![asciicast](https://asciinema.org/a/153899.png)](https://asciinema.org/a/153899)
 
 ### Docker, Docker-Compose, and Jenkins
 
@@ -52,9 +54,15 @@ Afterwards, restart docker:
 sudo systemctl daemon-reload && sudo systemctl restart docker
 ```
 
+Copy the private key under jenkins/config
+
+```bash
+cp id_rsa jenkins/config/integration-test.key
+```
+
 ### Start Jenkins
 
-Install Jenkins via the official package repositories
+Install Jenkins using the official docker image:
 
 ```bash
 ./02-start-jenkins.sh
@@ -76,21 +84,22 @@ Get the needed key for authenticating at: `http://IP_OF_JENKINS:9090`. Choose a 
 - `test-dummy`: sub job to run the relevant tests for amqp/rest vnfm
 - `test-generic`: sub job to run the relevant tests for generic
 - `test-arbitrary-branches`: entry point pipeline to run tests against self defined branch compositions
-- `test-bootstrap-config`: entry point pipeline to run the bootstrap install script against multiple configurations and distributions
 
 This repository is added as a [Multibranch Pipeline](https://jenkins.io/doc/book/pipeline/multibranch/). All repositories including a pipeline must include a single `Jenkinsfile`. Jenkins automatically pulls the branch on run and then executes the found `Jenkinsfile`. New branches will be found as well.
 
 ## Jenkins usage and configuration
+
 ### Integration tests
 To run the integration test suite manually against a docker-compose system under test, start the `test-main` pipeline with parameters (drop down point+click).
 
 ### Environment variables
-Because the integration tests need some "node specific" configuration (i.e. real-vim file, configuration file, ssh-key), paths to the files in `misc` branch are setup as environmental variables in the jenkins master node. This way, they are easily accessible in the pipeline steps, for example regarding the actual host ip or path to the private key. Those can be set up through `Manage Jenkins -> Manage Nodes -> Settings wheel -> Node properties`, in our case the master node.
+Because the integration tests need some "node specific" configuration (i.e. real-vim file, configuration files, ssh-key), paths to the files in `config` folder are setup as environmental variables in the jenkins master node.
+This way, they are easily accessible in the pipeline steps, for example regarding the actual host ip or path to the private key.
+Those can be set up through `Manage Jenkins -> Manage Nodes -> Settings wheel -> Node properties`, in our case the master node.
 
 #### Used environment variables
 - `HOST_IP`: IP of the node (needed for ems and docker-compose)
 - `CONFIG`: Path to integration-tests configuration (i.e. /home/ubuntu/jenkins/config)
-- `PEM_FILE`: Path to ssh private key (i.e. /home/ubuntu/jenkins/config/id_rsa)
 - `VIM_FILES`: Path to vim files (i.e. /home/ubuntu/jenkins/config/pop)
 
 Please be sure to provide a working default vimfile called `pop.json` inside your `VIM_FILES` folder, this will be used in your pipelines if not specifically overwritten. Information how to create your `pop.json` can be found [here](https://openbaton.github.io/documentation/pop-registration/)
